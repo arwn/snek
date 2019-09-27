@@ -1,15 +1,14 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 2.8.9)
 
-project(Snake)
+project (snake)
 
-add_library(hello
-	lib/snake/snake.cpp
-	lib/hello/hello.hpp
-	lib/hello/hello.cpp
+include_directories(lib)
+
+add_library(hello_snake
+	lib/hello_snake/hello.cpp
+	lib/hello_snake/hello.hpp
 )
 
-add_executable(snake
-	lib/snake/snake.cpp
-)
+add_executable(snake hello.cpp)
 
-target_link_libraries(snake hello)
+target_link_libraries(snake hello_snake)
