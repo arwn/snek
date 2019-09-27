@@ -2,5 +2,5 @@
 
 void hello(void)
 {
-	puts("Hello, alexander!");
+	puts("Hello, min-gyp!");
 }
