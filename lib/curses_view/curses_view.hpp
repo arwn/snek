@@ -17,7 +17,8 @@ class curses_view: public iview {
 	public:
 		void init();
 		void destroy();
-		void draw_screen(GameBoard board);
+		void flush_display();
+		void draw_tile(BoardTile t, int y, int x);
 		std::string prompt_user(std::string);
 		void message_user(std::string);
 };

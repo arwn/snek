@@ -5,8 +5,9 @@
 #include <unistd.h>
 #include <vector>
 #include <memory>
-// #include "curses_view/curses_view.hpp"
-#include "lib/curses_view/curses_view.hpp"
+#include <iterator>
+
+#include "curses_view/curses_view.hpp"
 #include "snake.hpp"
 
 static GameBoard board ={
@@ -77,6 +78,22 @@ move_snake(Direction d, std::list<std::tuple<int, int>> snek)
 	return 0;
 }
 
+void
+draw_board(std::shared_ptr<iview> view)
+{
+	int dy = 0;
+	int dx = 0;
+
+	for (auto &row : board) {
+		dy++;
+		dx = 0;
+		for (auto &col : row) {
+			dx++;
+			view->draw_tile(col, dy, dx);
+		}
+	}
+}
+
 int
 main(void)
 {
@@ -88,9 +105,10 @@ main(void)
 	snek.push_front(std::tuple(3,3));
 
 	while (view->running == true) {
-		view->draw_screen(board);
 		get_direction(view->get_key(), &d);
 		int crash = move_snake(d, snek);
+		draw_board(view);
+		view->flush_display();
 		sleep(1);
 	}
 
