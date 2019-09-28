@@ -1,3 +1,5 @@
+#pragma once
+
 #include "iview.hpp"
 #include <curses.h>
 #include <thread>
@@ -15,7 +17,7 @@ class curses_view: public iview {
 	public:
 		void init();
 		void destroy();
-		void draw_screen(int **board, int size);
+		void draw_screen(GameBoard board);
 		std::string prompt_user(std::string);
 		void message_user(std::string);
 };

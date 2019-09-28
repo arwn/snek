@@ -21,6 +21,6 @@ target_link_libraries(
 	snake
 	curses_view
 
-	#libs
+	#external
 	${CURSES_LIBRARIES}
 )

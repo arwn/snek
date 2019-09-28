@@ -1,10 +1,14 @@
 #include "curses_view.hpp"
 
+// TODO remove key != CTRLD. quit game from menu.
+// TODO add timeout to check if game is still running
 void
 curses_view::keylisten()
 {
 	while (key != CTRLD) {
-		key = wgetch(stdscr);
+		auto c = wgetch(stdscr);
+		if (c != ERR)
+			key = c;
 	}
 	running = false;
 }
@@ -16,6 +20,7 @@ curses_view::init()
 	initscr();
 	cbreak();
 	noecho();
+	nodelay(stdscr, true);
 	keypad(stdscr, TRUE);
 
 	running = true;
@@ -34,10 +39,16 @@ curses_view::destroy()
 }
 
 void
-curses_view::draw_screen(int **board, int size)
+curses_view::draw_screen(GameBoard board)
 {
-	waddstr(stdscr, "TODO: implement draw screen");
-	wrefresh(stdscr);
+	auto row = 0;
+	for (auto &y : board) {
+		wmove(stdscr, row, 0);
+		for (auto &x : y) {
+			waddch(stdscr, x+'a');
+		}
+		row += 1;
+	}
 }
 
 std::string
