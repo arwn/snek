@@ -27,7 +27,6 @@ curses_view::init()
 
 	// spawn listener thread
 	keythread = std::thread(&curses_view::keylisten, this);
-
 }
 
 void
@@ -39,17 +38,17 @@ curses_view::destroy()
 }
 
 void
-curses_view::draw_screen(GameBoard board)
+curses_view::flush_display()
 {
-	auto row = 0;
-	for (auto &y : board) {
-		wmove(stdscr, row, 0);
-		for (auto &x : y) {
-			waddch(stdscr, x+'a');
-		}
-		row += 1;
-	}
+	wrefresh(stdscr);
 }
+
+void
+curses_view::draw_tile(BoardTile t, int y, int x)
+{
+	mvaddch(y, x, t + 'a');
+}
+
 
 std::string
 curses_view::prompt_user(std::string msg)

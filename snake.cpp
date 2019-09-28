@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <vector>
 #include <memory>
+#include <iterator>
+
 #include "curses_view/curses_view.hpp"
 #include "snake.hpp"
 
@@ -51,17 +53,33 @@ move_snake(Direction d)
 	}
 }
 
+void
+draw_board(std::shared_ptr<iview> view)
+{
+	int dy = 0;
+	int dx = 0;
+
+	for (auto &row : board) {
+		dy++;
+		dx = 0;
+		for (auto &col : row) {
+			dx++;
+			view->draw_tile(col, dy, dx);
+		}
+	}
+}
+
 int
 main(void)
 {
 	std::shared_ptr<iview> view = std::make_shared<curses_view>();
 	view->init();
-	Direction d = East;
+	Direction d;
 
 	while (view->running == true) {
-		view->draw_screen(board);
 		get_direction(view->get_key(), &d);
-		move_snake(d);
+		draw_board(view);
+		view->flush_display();
 		sleep(1);
 	}
 
