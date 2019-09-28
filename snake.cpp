@@ -1,4 +1,7 @@
 #include <cstdio>
+#include <iostream>
+#include <tuple>
+#include <list>
 #include <unistd.h>
 #include <vector>
 #include <memory>
@@ -6,7 +9,6 @@
 
 #include "curses_view/curses_view.hpp"
 #include "snake.hpp"
-
 
 static GameBoard board ={
 	{Empty, Empty, Empty, Empty, Empty},
@@ -20,37 +22,60 @@ void
 get_direction(int key, Direction *d)
 {
 	switch (key) {
-		case 'w':
-			*d = North; break;
-		case 'a':
-			*d = West; break;
-		case 's':
-			*d = South; break;
-		case 'd':
-			*d = East; break;
+	case 'w':
+		*d = North; break;
+	case 'a':
+		*d = West; break;
+	case 's':
+		*d = South; break;
+	case 'd':
+		*d = East; break;
 	}
 }
 
 // TODO: this function doesn't work, make it linked list.
-void
-move_snake(Direction d)
+int
+move_snake(Direction d, std::list<std::tuple<int, int>> snek)
 {
-	for (auto y = 0; y < board.size(); y++) {
-		for (auto x = 0; x < board.size(); x++) {
-			if (board[y][x] == Head){
-				switch (d) {
-					case North:
-						board[y-1][x] = Head; break;
-					case South:
-						board[y+1][x] = Head; break;
-					case East:
-						board[y][x+1] = Head; break;
-					case West:
-						board[y][x-1] = Head; break;
-				}
-			}
-		}
+	auto head = snek.front();
+	int x = std::get<0>(head);
+	int y = std::get<1>(head);
+	switch (d) {
+	case North:
+		--y;
+		// board[y - 1][x] = Head;
+		break;
+	case South:
+		++y;
+		// board[y + 1][x] = Head;
+		break;
+	case East:
+		++x;
+		// board[y][x + 1] = Head;
+		break;
+	case West:
+		--x;
+		// board[y][x - 1] = Head;
+		break;
 	}
+	if (x < 0 || y < 0)
+		return 1;
+
+	board[std::get<1>(head)][std::get<0>(head)] = Tail;
+
+	auto back = snek.back();
+	board[std::get<1>(back)][std::get<0>(back)] = Empty;
+	snek.pop_back();
+
+	snek.push_front(std::tuple<int, int>(x, y));
+	board[y][x] = Head;
+	// for (auto y = 0; y < board.size(); y++) {
+	// 	for (auto x = 0; x < board.size(); x++) {
+	// if (board[y][x] == Head) {
+	// }
+	// 	}
+	// }
+	return 0;
 }
 
 void
@@ -74,10 +99,14 @@ main(void)
 {
 	std::shared_ptr<iview> view = std::make_shared<curses_view>();
 	view->init();
-	Direction d;
+	Direction d = East;
+	std::list<std::tuple<int, int>> snek;
+
+	snek.push_front(std::tuple(3,3));
 
 	while (view->running == true) {
 		get_direction(view->get_key(), &d);
+		int crash = move_snake(d, snek);
 		draw_board(view);
 		view->flush_display();
 		sleep(1);
