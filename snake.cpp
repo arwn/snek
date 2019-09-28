@@ -13,7 +13,7 @@
 static GameBoard board ={
 	{Empty, Empty, Empty, Empty, Empty},
 	{Empty, Empty, Empty, Empty, Empty},
-	{Empty, Head, Empty, Empty, Empty},
+	{Empty, Empty, Empty, Empty, Empty},
 	{Empty, Empty, Empty, Empty, Empty},
 	{Fruit, Empty, Empty, Empty, Empty},
 };
@@ -35,7 +35,7 @@ get_direction(int key, Direction *d)
 
 // TODO: this function doesn't work, make it linked list.
 int
-move_snake(Direction d, std::list<std::tuple<int, int>> snek)
+move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 {
 	auto head = snek.front();
 	int x = std::get<0>(head);
