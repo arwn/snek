@@ -1,15 +1,26 @@
 project (snake)
 cmake_minimum_required(VERSION 2.8.9)
 
-include_directories(lib)
+set(CMAKE_CXX_STANDARD 17)
 
-add_library(hello_snake
-	lib/hello_snake/hello.cpp
-	lib/hello_snake/hello.hpp
+find_package(Curses REQUIRED)
+
+include_directories(lib .
+	${CURSES_INCLUDE_DIR}
+)
+
+add_library(curses_view
+	lib/curses_view/curses_view.cpp
+	lib/curses_view/curses_view.hpp
 )
 
 add_executable(snake snake.cpp)
 
-target_link_libraries(snake hello_snake)
 
-set_property(TARGET snake PROPERTY CXX_STANDARD 17)
+target_link_libraries(
+	snake
+	curses_view
+
+	#libs
+	${CURSES_LIBRARIES}
+)
