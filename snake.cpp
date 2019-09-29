@@ -106,19 +106,12 @@ draw_board(iview* view)
 int
 load_lib(const char* libname, void** lib, iview** view)
 {
-<<<<<<< HEAD
-	iview* view;
-	void *lib = dlopen("./build/libtext_view.dylib", RTLD_NOW);
-	if (!lib) {
-		std::cout << "Lib no open 0 " << dlerror() << std::endl;
-=======
 	void* new_lib = NULL;
 	iview* new_view = NULL;
 
 	new_lib = dlopen(libname, RTLD_NOW);
 	if (!new_lib) {
 		std::cout << "Unable to open new_lib: " << dlerror() << std::endl;
->>>>>>> 3fefc54e63935c5f1a42ff35b674908e39071954
 		return 1;
 	}
 	iview* (*fn)(void) = (iview*(*)())dlsym(new_lib, "make_view");
@@ -174,12 +167,8 @@ main(void)
 	Direction d = East;
 	std::list<std::tuple<int, int>> snek;
 
-<<<<<<< HEAD
-	snek.push_front(std::tuple(3,3));
-=======
 	snek.push_front(std::tuple(3, 3));
 
->>>>>>> 3fefc54e63935c5f1a42ff35b674908e39071954
 	while (view->running == true) {
 		// view->destroy();
 		// if (change_lib(libs[0], &lib, &view))
