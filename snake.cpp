@@ -67,11 +67,13 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 		// board[y][x - 1] = Head;
 		break;
 	}
-	if (x < 0 || y < 0)
-		return 1;
 
-	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size())
-		return 1;
+	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size()) {
+		auto back = snek.back();
+		board[std::get<1>(back)][std::get<0>(back)] = Empty;
+		snek.pop_back();
+		return snek.size() > 0;
+	}
 
 	board[std::get<1>(head)][std::get<0>(head)] = Tail;
 
@@ -94,12 +96,12 @@ draw_board(iview* view)
 	int dx = 0;
 
 	for (auto &row : board) {
-		dy++;
 		dx = 0;
 		for (auto &col : row) {
-			dx++;
 			view->draw_tile(col, dy, dx);
+			dx++;
 		}
+		dy++;
 	}
 }
 
@@ -181,6 +183,8 @@ main(void)
 		draw_board(view);
 		view->flush_display();
 		sleep(1);
+		if (crash)
+			assert(0);
 	}
 
 	view->destroy();
