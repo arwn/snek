@@ -96,32 +96,79 @@ draw_board(iview* view)
 }
 
 int
+load_lib(const char* libname, void** lib, iview** view)
+{
+	void* new_lib = NULL;
+	iview* new_view = NULL;
+
+	new_lib = dlopen(libname, RTLD_NOW);
+	if (!new_lib) {
+		std::cout << "Unable to open new_lib: " << dlerror() << std::endl;
+		return 1;
+	}
+	iview* (*fn)(void) = (iview*(*)())dlsym(new_lib, "make_view");
+	if (!fn) {
+		std::cout << "Unable to open \"make_view\": " << dlerror() << std::endl;
+		dlclose(new_lib);
+		return 1;
+	}
+	new_view = fn();
+	if (!new_view) {
+		std::cerr << "Unable to create view" << std::endl;
+		dlclose(new_lib);
+		return 1;
+	}
+
+	*lib = new_lib;
+	*view = new_view;
+	return 0;
+}
+
+int
+change_lib(const char* libname, void** lib, iview** view)
+{
+	iview* new_view = NULL;
+	void* new_lib = NULL;
+
+	if (load_lib(libname, &new_lib, &new_view)) {
+		std::cerr << "Unable to change lib in change_lib" << std::endl;
+		return 1;
+	}
+	if (*lib)
+		dlclose(*lib);
+	*lib = new_lib;
+	*view = new_view;
+	return 0;
+}
+
+const char*
+libs[] = {
+	"./build/libcurses_view.dylib",
+};
+
+int
 main(void)
 {
-	iview* view;
-	void *lib = dlopen("./build/libcurses_view.dylib", RTLD_NOW);
-	if (!lib) {
-		std::cout << "Lib no open 0 " << dlerror() << std::endl;
-		return 1;
-	}
-	iview* (*fn)(void) = (iview*(*)())dlsym(lib, "make_view");
-	if (!fn) {
-		std::cout << "Function not opening 0 " << dlerror() << std::endl;
-		return 1;
-	}
-	view = fn();
+	iview* view = NULL;
+	void* lib = NULL;
 
-	// std::shared_ptr<iview> view = std::make_shared<curses_view>();
+	if (change_lib(libs[0], &lib, &view)) {
+		std::cerr << "Unable to change lib" << std::endl;
+	}
 	view->init();
 	Direction d = East;
 	std::list<std::tuple<int, int>> snek;
 
-	snek.push_front(std::tuple(3,3));
+	snek.push_front(std::tuple(3, 3));
 
 	while (view->running == true) {
+		// view->destroy();
+		// if (change_lib(libs[0], &lib, &view))
+		// 	return 1;
+		// view->init();
+
 		int key = view->get_key();
 		get_direction(key, &d);
-		// std::cerr << key << std::endl;
 		int crash = move_snake(d, snek);
 		draw_board(view);
 		view->flush_display();
