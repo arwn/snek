@@ -24,13 +24,21 @@ get_direction(int key, Direction *d)
 {
 	switch (key) {
 	case 'w':
-		*d = North; break;
+		if (*d != South)
+			*d = North;
+		break;
 	case 'a':
-		*d = West; break;
+		if (*d != East)
+			*d = West;
+		break;
 	case 's':
-		*d = South; break;
+		if (*d != North)
+			*d = South;
+		break;
 	case 'd':
-		*d = East; break;
+		if (*d != West)
+			*d = East;
+		break;
 	}
 }
 
@@ -62,20 +70,20 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 	if (x < 0 || y < 0)
 		return 1;
 
+	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size())
+		return 1;
+
 	board[std::get<1>(head)][std::get<0>(head)] = Tail;
 
-	auto back = snek.back();
-	board[std::get<1>(back)][std::get<0>(back)] = Empty;
-	snek.pop_back();
+	if (board[y][x] != Fruit) {
+		auto back = snek.back();
+		board[std::get<1>(back)][std::get<0>(back)] = Empty;
+		snek.pop_back();
+	}
 
 	snek.push_front(std::tuple<int, int>(x, y));
 	board[y][x] = Head;
-	// for (auto y = 0; y < board.size(); y++) {
-	// 	for (auto x = 0; x < board.size(); x++) {
-	// if (board[y][x] == Head) {
-	// }
-	// 	}
-	// }
+
 	return 0;
 }
 
