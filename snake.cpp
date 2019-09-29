@@ -24,13 +24,21 @@ get_direction(int key, Direction *d)
 {
 	switch (key) {
 	case 'w':
-		*d = North; break;
+		if (*d != South)
+			*d = North;
+		break;
 	case 'a':
-		*d = West; break;
+		if (*d != East)
+			*d = West;
+		break;
 	case 's':
-		*d = South; break;
+		if (*d != North)
+			*d = South;
+		break;
 	case 'd':
-		*d = East; break;
+		if (*d != West)
+			*d = East;
+		break;
 	}
 }
 
@@ -62,20 +70,20 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 	if (x < 0 || y < 0)
 		return 1;
 
+	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size())
+		return 1;
+
 	board[std::get<1>(head)][std::get<0>(head)] = Tail;
 
-	auto back = snek.back();
-	board[std::get<1>(back)][std::get<0>(back)] = Empty;
-	snek.pop_back();
+	if (board[y][x] != Fruit) {
+		auto back = snek.back();
+		board[std::get<1>(back)][std::get<0>(back)] = Empty;
+		snek.pop_back();
+	}
 
 	snek.push_front(std::tuple<int, int>(x, y));
 	board[y][x] = Head;
-	// for (auto y = 0; y < board.size(); y++) {
-	// 	for (auto x = 0; x < board.size(); x++) {
-	// if (board[y][x] == Head) {
-	// }
-	// 	}
-	// }
+
 	return 0;
 }
 
@@ -96,28 +104,88 @@ draw_board(iview* view)
 }
 
 int
-main(void)
+load_lib(const char* libname, void** lib, iview** view)
 {
+<<<<<<< HEAD
 	iview* view;
 	void *lib = dlopen("./build/libtext_view.dylib", RTLD_NOW);
 	if (!lib) {
 		std::cout << "Lib no open 0 " << dlerror() << std::endl;
-		return 1;
-	}
-	iview* (*fn)(void) = (iview*(*)())dlsym(lib, "make_view");
-	if (!fn) {
-		std::cout << "Function not opening 0 " << dlerror() << std::endl;
-		return 1;
-	}
-	view = fn();
+=======
+	void* new_lib = NULL;
+	iview* new_view = NULL;
 
-	// std::shared_ptr<iview> view = std::make_shared<curses_view>();
+	new_lib = dlopen(libname, RTLD_NOW);
+	if (!new_lib) {
+		std::cout << "Unable to open new_lib: " << dlerror() << std::endl;
+>>>>>>> 3fefc54e63935c5f1a42ff35b674908e39071954
+		return 1;
+	}
+	iview* (*fn)(void) = (iview*(*)())dlsym(new_lib, "make_view");
+	if (!fn) {
+		std::cout << "Unable to open \"make_view\": " << dlerror() << std::endl;
+		dlclose(new_lib);
+		return 1;
+	}
+	new_view = fn();
+	if (!new_view) {
+		std::cerr << "Unable to create view" << std::endl;
+		dlclose(new_lib);
+		return 1;
+	}
+
+	*lib = new_lib;
+	*view = new_view;
+	return 0;
+}
+
+int
+change_lib(const char* libname, void** lib, iview** view)
+{
+	iview* new_view = NULL;
+	void* new_lib = NULL;
+
+	if (load_lib(libname, &new_lib, &new_view)) {
+		std::cerr << "Unable to change lib in change_lib" << std::endl;
+		return 1;
+	}
+	if (*lib)
+		dlclose(*lib);
+	*lib = new_lib;
+	*view = new_view;
+	return 0;
+}
+
+const char*
+libs[] = {
+	"./build/libcurses_view.dylib",
+};
+
+int
+main(void)
+{
+	iview* view = NULL;
+	void* lib = NULL;
+
+	if (change_lib(libs[0], &lib, &view)) {
+		std::cerr << "Unable to change lib" << std::endl;
+	}
 	view->init();
 	Direction d = East;
 	std::list<std::tuple<int, int>> snek;
 
+<<<<<<< HEAD
 	snek.push_front(std::tuple(3,3));
+=======
+	snek.push_front(std::tuple(3, 3));
+
+>>>>>>> 3fefc54e63935c5f1a42ff35b674908e39071954
 	while (view->running == true) {
+		// view->destroy();
+		// if (change_lib(libs[0], &lib, &view))
+		// 	return 1;
+		// view->init();
+
 		int key = view->get_key();
 		get_direction(key, &d);
 		int crash = move_snake(d, snek);

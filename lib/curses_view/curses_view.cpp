@@ -41,7 +41,7 @@ curses_view::destroy()
 {
 	endwin();
 	close(STDIN_FILENO);
-	keythread.join();
+	// keythread.join();
 }
 
 void
