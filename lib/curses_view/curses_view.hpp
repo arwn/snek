@@ -16,7 +16,7 @@ class curses_view: public iview {
 		void keylisten();
 
 	public:
-		void init();
+		void init(int x, int y);
 		void destroy();
 		void flush_display();
 		void draw_tile(BoardTile t, int y, int x);

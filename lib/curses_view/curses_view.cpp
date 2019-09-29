@@ -21,7 +21,7 @@ make_view(void)
 }
 
 void
-curses_view::init()
+curses_view::init(int x, int y)
 {
 	// init ncurses
 	scr = initscr();

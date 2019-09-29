@@ -7,9 +7,19 @@ make_view(void)
 }
 
 void
-text_view::init()
+text_view::init(int x, int y)
 {
 	running = true;
+
+	GameBoard b;
+	for (int xx = 0; xx < x; xx++) {
+		std::vector<BoardTile> row;
+		for (int yy = 0; yy < y; yy++) {
+			row.push_back(Empty);
+		}
+		b.push_back(row);
+	}
+	this->board = b;
 
 	// const static string clear_screen[] = {"\e[1;1H\e[2J"};
 	// cout << clear_screen;
@@ -18,7 +28,8 @@ text_view::init()
 void
 text_view::destroy()
 {
-	init();
+	// TODO: what the hell? why is this here?
+	init(0, 0);
 }
 
 void
@@ -39,7 +50,6 @@ text_view::flush_display()
 	putchar('\n');
 	fflush(stdout);
 
-	// maybe this should be moved
 	std::cout << "Enter a direction (wasd)" << std::endl;
 	char c;
 	std::cin >> c;

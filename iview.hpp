@@ -10,7 +10,7 @@ class iview {
   	public:
 		bool running = false;
 
-		virtual void init() = 0;
+		virtual void init(int x, int y) = 0;
 		virtual void destroy() = 0;
 		virtual void flush_display() = 0;
 		virtual void draw_tile(BoardTile t, int y, int x) = 0;

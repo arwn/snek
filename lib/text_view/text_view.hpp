@@ -10,16 +10,10 @@ using std::string;
 
 class text_view: public iview {
 	private:
-		GameBoard board = {
-			{Empty, Empty, Empty, Empty, Empty},
-			{Empty, Empty, Empty, Empty, Empty},
-			{Empty, Empty, Empty, Empty, Empty},
-			{Empty, Empty, Empty, Empty, Empty},
-			{Empty, Empty, Empty, Empty, Empty},
-		};
+		GameBoard board;
 
 	public:
-		void init();
+		void init(int x, int y);
 		void destroy();
 		void flush_display();
 		void draw_tile(BoardTile t, int y, int x);

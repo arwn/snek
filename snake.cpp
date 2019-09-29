@@ -11,13 +11,7 @@
 #include "curses_view/curses_view.hpp"
 #include "snake.hpp"
 
-static GameBoard board ={
-	{Empty, Empty, Empty, Empty, Empty},
-	{Empty, Empty, Empty, Empty, Empty},
-	{Empty, Empty, Empty, Empty, Empty},
-	{Empty, Empty, Empty, Empty, Empty},
-	{Fruit, Empty, Empty, Empty, Empty},
-};
+static GameBoard board;
 
 void
 get_direction(int key, Direction *d)
@@ -151,6 +145,20 @@ change_lib(const char* libname, void** lib, iview** view)
 	return 0;
 }
 
+GameBoard
+make_board(int x, int y)
+{
+	GameBoard b;
+	for (int xx = 0; xx < x; xx++) {
+		std::vector<BoardTile> row;
+		for (int yy = 0; yy < y; yy++) {
+			row.push_back(Empty);
+		}
+		b.push_back(row);
+	}
+	return b;
+}
+
 const char*
 libs[] = {
 	"./build/libcurses_view.dylib",
@@ -158,15 +166,38 @@ libs[] = {
 };
 
 int
-main(void)
+main(int argc, char **argv)
 {
+	int x = 10;
+	int y = 10;
+	switch (argc) {
+	case 3:
+		y = atoi(argv[2]);
+	case 2:
+		x = atoi(argv[1]);
+	case 1:
+		break;
+	default:
+		std::cout << "usage: " << argv[0] << "[x] [y]" << std::endl;
+		return 1;
+	}
+
+	if (x < 5 || y < 5) {
+		std::cout << "Wait that's ridiculous" << std::endl;
+		return 1;
+	}
+
+	board = make_board(x, y);
+
 	iview* view = NULL;
 	void* lib = NULL;
 
-	if (change_lib(libs[1], &lib, &view)) {
+	int ii = 0;
+
+	if (change_lib(libs[ii], &lib, &view)) {
 		std::cerr << "Unable to change lib" << std::endl;
 	}
-	view->init();
+	view->init(x, y);
 	Direction d = East;
 	std::list<std::tuple<int, int>> snek;
 
@@ -174,9 +205,9 @@ main(void)
 
 	while (view->running == true) {
 		// view->destroy();
-		// if (change_lib(libs[0], &lib, &view))
+		// if (change_lib(libs[ii++ % 2], &lib, &view))
 		// 	return 1;
-		// view->init();
+		// view->init(x, y);
 
 		int key = view->get_key();
 		get_direction(key, &d);
