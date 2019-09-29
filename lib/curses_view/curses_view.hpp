@@ -10,6 +10,7 @@
 
 class curses_view: public iview {
 	private:
+		WINDOW *scr;
 		std::thread keythread;
 
 		void keylisten();
@@ -21,5 +22,4 @@ class curses_view: public iview {
 		void draw_tile(BoardTile t, int y, int x);
 		std::string prompt_user(std::string);
 		void message_user(std::string);
-		int get_key(void);
 };
