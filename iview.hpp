@@ -17,5 +17,5 @@ class iview {
 		virtual std::string prompt_user(std::string msg) = 0;
 		virtual void message_user(std::string msg) = 0;
 
-		virtual int get_key(void) = 0;
+		virtual int get_key(void) { return key; }
 };

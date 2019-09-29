@@ -7,7 +7,7 @@ void
 curses_view::keylisten()
 {
 	while (key != CTRLD) {
-		auto c = wgetch(stdscr);
+		auto c = getchar();
 		if (c != ERR)
 			key = c;
 	}
@@ -24,16 +24,16 @@ void
 curses_view::init()
 {
 	// init ncurses
-	initscr();
+	scr = initscr();
 	cbreak();
 	noecho();
-	nodelay(stdscr, true);
-	keypad(stdscr, TRUE);
+	nodelay(scr, true);
+	keypad(scr, TRUE);
 
 	running = true;
 
 	// spawn listener thread
-	// keythread = std::thread(&curses_view::keylisten, this);
+	keythread = std::thread(&curses_view::keylisten, this);
 }
 
 void
@@ -47,7 +47,7 @@ curses_view::destroy()
 void
 curses_view::flush_display()
 {
-	wrefresh(stdscr);
+	wrefresh(scr);
 }
 
 void
@@ -60,20 +60,14 @@ curses_view::draw_tile(BoardTile t, int y, int x)
 std::string
 curses_view::prompt_user(std::string msg)
 {
-	waddstr(stdscr, "TODO: implement prompt user");
-	wrefresh(stdscr);
+	waddstr(scr, "TODO: implement prompt user");
+	wrefresh(scr);
 	return nullptr;
 }
 
 void
 curses_view::message_user(std::string msg)
 {
-	waddstr(stdscr, msg.c_str());
-	wrefresh(stdscr);
-}
-
-int
-curses_view::get_key(void)
-{
-	return wgetch(stdscr);
+	waddstr(scr, msg.c_str());
+	wrefresh(scr);
 }
