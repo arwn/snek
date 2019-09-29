@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <dlfcn.h>
 #include <iostream>
 #include <tuple>
 #include <list>
@@ -79,7 +80,7 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 }
 
 void
-draw_board(std::shared_ptr<iview> view)
+draw_board(iview* view)
 {
 	int dy = 0;
 	int dx = 0;
@@ -97,7 +98,20 @@ draw_board(std::shared_ptr<iview> view)
 int
 main(void)
 {
-	std::shared_ptr<iview> view = std::make_shared<curses_view>();
+	iview* view;
+	void *lib = dlopen("./build/libcurses_view.dylib", RTLD_NOW);
+	if (!lib) {
+		std::cout << "Lib no open 0 " << dlerror() << std::endl;
+		return 1;
+	}
+	iview* (*fn)(void) = (iview*(*)())dlsym(lib, "make_view");
+	if (!fn) {
+		std::cout << "Function not opening 0 " << dlerror() << std::endl;
+		return 1;
+	}
+	view = fn();
+
+	// std::shared_ptr<iview> view = std::make_shared<curses_view>();
 	view->init();
 	Direction d = East;
 	std::list<std::tuple<int, int>> snek;
@@ -105,7 +119,9 @@ main(void)
 	snek.push_front(std::tuple(3,3));
 
 	while (view->running == true) {
-		get_direction(view->get_key(), &d);
+		int key = view->get_key();
+		get_direction(key, &d);
+		// std::cerr << key << std::endl;
 		int crash = move_snake(d, snek);
 		draw_board(view);
 		view->flush_display();

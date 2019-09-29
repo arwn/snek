@@ -1,3 +1,4 @@
+#include <iostream>
 #include "curses_view.hpp"
 
 // TODO remove key != CTRLD. quit game from menu.
@@ -13,6 +14,12 @@ curses_view::keylisten()
 	running = false;
 }
 
+extern "C" iview*
+make_view(void)
+{
+	return (new curses_view());
+}
+
 void
 curses_view::init()
 {
@@ -26,7 +33,7 @@ curses_view::init()
 	running = true;
 
 	// spawn listener thread
-	keythread = std::thread(&curses_view::keylisten, this);
+	// keythread = std::thread(&curses_view::keylisten, this);
 }
 
 void
@@ -65,3 +72,8 @@ curses_view::message_user(std::string msg)
 	wrefresh(stdscr);
 }
 
+int
+curses_view::get_key(void)
+{
+	return wgetch(stdscr);
+}
