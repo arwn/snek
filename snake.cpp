@@ -99,7 +99,7 @@ int
 main(void)
 {
 	iview* view;
-	void *lib = dlopen("./build/libcurses_view.dylib", RTLD_NOW);
+	void *lib = dlopen("./build/libtext_view.dylib", RTLD_NOW);
 	if (!lib) {
 		std::cout << "Lib no open 0 " << dlerror() << std::endl;
 		return 1;
@@ -117,11 +117,9 @@ main(void)
 	std::list<std::tuple<int, int>> snek;
 
 	snek.push_front(std::tuple(3,3));
-
 	while (view->running == true) {
 		int key = view->get_key();
 		get_direction(key, &d);
-		// std::cerr << key << std::endl;
 		int crash = move_snake(d, snek);
 		draw_board(view);
 		view->flush_display();
