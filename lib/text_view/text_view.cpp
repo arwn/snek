@@ -11,8 +11,8 @@ text_view::init()
 {
 	running = true;
 
-	const static string clear_screen[] = {"\e[1;1H\e[2J"};
-	cout << clear_screen;
+	// const static string clear_screen[] = {"\e[1;1H\e[2J"};
+	// cout << clear_screen;
 }
 
 void
@@ -24,15 +24,30 @@ text_view::destroy()
 void
 text_view::flush_display()
 {
+	int dy = 0;
+	int dx = 0;
+
+	for (auto &row : board) {
+		dx = 0;
+		for (auto &col : row) {
+			putchar(col + 'a');
+			dx++;
+		}
+		putchar('\n');
+		dy++;
+	}
+	putchar('\n');
 	fflush(stdout);
+
+	// maybe this should be moved
+	key = getchar();
 }
 
 #include <curses.h>
 void
 text_view::draw_tile(BoardTile t, int y, int x)
 {
-	// intentionally left blank
-	// flush_display prints the board
+	board[y][x] = t;
 }
 
 std::string

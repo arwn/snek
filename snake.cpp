@@ -154,6 +154,7 @@ change_lib(const char* libname, void** lib, iview** view)
 const char*
 libs[] = {
 	"./build/libcurses_view.dylib",
+	"./build/libtext_view.dylib",
 };
 
 int
