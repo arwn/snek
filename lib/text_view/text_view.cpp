@@ -40,7 +40,10 @@ text_view::flush_display()
 	fflush(stdout);
 
 	// maybe this should be moved
-	key = getchar();
+	std::cout << "Enter a direction (wasd)" << std::endl;
+	char c;
+	std::cin >> c;
+	key = c;
 }
 
 #include <curses.h>

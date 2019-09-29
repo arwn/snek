@@ -72,7 +72,7 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 		auto back = snek.back();
 		board[std::get<1>(back)][std::get<0>(back)] = Empty;
 		snek.pop_back();
-		return snek.size() > 0;
+		return snek.size() == 0;
 	}
 
 	board[std::get<1>(head)][std::get<0>(head)] = Tail;
@@ -163,7 +163,7 @@ main(void)
 	iview* view = NULL;
 	void* lib = NULL;
 
-	if (change_lib(libs[0], &lib, &view)) {
+	if (change_lib(libs[1], &lib, &view)) {
 		std::cerr << "Unable to change lib" << std::endl;
 	}
 	view->init();
