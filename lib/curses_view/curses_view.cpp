@@ -6,7 +6,16 @@
 void
 curses_view::keylisten()
 {
+	fd_set s_rd, s_wr, s_ex;
+	static struct timeval time = {0,100};
+
 	while (running) {
+		FD_ZERO(&s_rd);
+		FD_ZERO(&s_wr);
+		FD_ZERO(&s_ex);
+		FD_SET(fileno(stdin), &s_rd);
+		if (!select(fileno(stdin)+1, &s_rd, &s_wr, &s_ex, &time))
+			continue;
 		auto c = getchar();
 		if (c != ERR)
 			key = c;
