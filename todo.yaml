@@ -1,9 +1,9 @@
 TODO:
   - 3 libs
   - fix curses_view blocking getchar
-  - center snake on load
 
 DONE:
   - specify size of board in command line
   - quit button
   - tab between GUI libs
+  - center snake on load
