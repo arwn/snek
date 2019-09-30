@@ -76,3 +76,8 @@ text_view::message_user(std::string msg)
 {
 	cout << msg << endl;
 }
+
+void
+text_view::sleep(void)
+{
+}

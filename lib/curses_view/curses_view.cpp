@@ -72,3 +72,9 @@ curses_view::message_user(std::string msg)
 	waddstr(scr, msg.c_str());
 	wrefresh(scr);
 }
+
+void
+curses_view::sleep(void)
+{
+	::sleep(1);
+}

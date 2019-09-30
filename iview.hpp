@@ -16,6 +16,7 @@ class iview {
 		virtual void draw_tile(BoardTile t, int y, int x) = 0;
 		virtual std::string prompt_user(std::string msg) = 0;
 		virtual void message_user(std::string msg) = 0;
+		virtual void sleep(void) = 0;
 
 		virtual ~iview() {};
 

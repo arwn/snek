@@ -224,7 +224,7 @@ main(int argc, char **argv)
 		int crash = move_snake(d, snek);
 		draw_board(view);
 		view->flush_display();
-		sleep(1);
+		view->sleep();
 		if (crash)
 			assert(0);
 	}
