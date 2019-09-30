@@ -22,7 +22,19 @@ add_library(text_view SHARED
 	lib/text_view/text_view.hpp
 )
 
+add_library(curses2_view SHARED
+	lib/curses2_view/curses2_view.cpp
+	lib/curses2_view/curses2_view.hpp
+)
+
 add_executable(snake snake.cpp)
+
+target_link_libraries(
+	curses2_view
+
+	#external
+	${CURSES_LIBRARIES}
+)
 
 target_link_libraries(
 	curses_view

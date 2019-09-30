@@ -181,6 +181,7 @@ const char*
 libs[] = {
 	"./build/libcurses_view.dylib",
 	"./build/libtext_view.dylib",
+	"./build/libcurses2_view.dylib",
 };
 
 int
@@ -228,6 +229,7 @@ main(int argc, char **argv)
 	board[y/2][x/2] = Head;
 
 	gen_fruit();
+	int crash = 0;
 
 	while (view->running == true) {
 		draw_board(view);
@@ -246,7 +248,7 @@ main(int argc, char **argv)
 			break;
 		}
 		get_direction(key, &d);
-		int crash = move_snake(d, snek);
+		crash = move_snake(d, snek);
 		if (crash)
 			break;
 	}
@@ -254,6 +256,7 @@ main(int argc, char **argv)
 	view->destroy();
 	delete view;
 	dlclose(lib);
-	assert("Game over" && 0);
+	if (crash)
+		assert("Game over" && 0);
 	return 0;
 }
