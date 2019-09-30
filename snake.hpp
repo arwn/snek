@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+#include <tuple>
 #include <vector>
 
 enum BoardTile {
@@ -17,3 +19,4 @@ enum Direction {
 };
 
 using GameBoard = std::vector<std::vector<BoardTile>>;
+using Snake = std::list<std::tuple<int, int>>;

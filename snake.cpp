@@ -46,11 +46,13 @@ gen_fruit(void)
 				empty.push_back(&board[yy][xx]);
 		}
 	}
+	if (empty.size() <= 0)
+		return;
 	*empty[rand() % empty.size()] = Fruit;
 }
 
 int
-move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
+move_snake(Direction d, Snake& snek)
 {
 	auto head = snek.front();
 	int x = std::get<0>(head);
@@ -70,8 +72,7 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 		break;
 	}
 
-	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size()
-		|| board[y][x] == Tail) {
+	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size()) {
 		auto back = snek.back();
 		board[std::get<1>(back)][std::get<0>(back)] = Empty;
 		snek.pop_back();
@@ -85,15 +86,18 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 		board[std::get<1>(back)][std::get<0>(back)] = Empty;
 		snek.pop_back();
 	} else {
-		board[y][x] = Head;
-
 		gen_fruit();
+		board[y][x] = Empty;
 	}
 
+	if (board[y][x] != Empty) {
+		board[std::get<1>(head)][std::get<0>(head)] = Head;
+		return snek.size() == 0;
+	}
 	snek.push_front(std::tuple<int, int>(x, y));
 	board[y][x] = Head;
 
-	return 0;
+	return snek.size() >= (board.size() * board[0].size());
 }
 
 void
@@ -215,7 +219,7 @@ main(int argc, char **argv)
 	view->init(x, y);
 	Direction d = East;
 
-	std::list<std::tuple<int, int>> snek;
+	Snake snek;
 	snek.push_front(std::tuple(x/2 - 2, y/2));
 	board[y/2][x/2 - 2] = Tail;
 	snek.push_front(std::tuple(x/2 - 1, y/2));
@@ -244,10 +248,12 @@ main(int argc, char **argv)
 		get_direction(key, &d);
 		int crash = move_snake(d, snek);
 		if (crash)
-			assert(0);
+			break;
 	}
 
 	view->destroy();
 	delete view;
+	dlclose(lib);
+	assert("Game over" && 0);
 	return 0;
 }
