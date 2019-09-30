@@ -138,10 +138,10 @@ change_lib(const char* libname, void** lib, iview** view)
 		std::cerr << "Unable to change lib in change_lib" << std::endl;
 		return 1;
 	}
+	delete *view;
 	if (*lib)
 		dlclose(*lib);
 	*lib = new_lib;
-	delete *view;
 	*view = new_view;
 	return 0;
 }
