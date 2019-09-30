@@ -149,9 +149,9 @@ GameBoard
 make_board(int x, int y)
 {
 	GameBoard b;
-	for (int xx = 0; xx < x; xx++) {
+	for (int yy = 0; yy < y; yy++) {
 		std::vector<BoardTile> row;
-		for (int yy = 0; yy < y; yy++) {
+		for (int xx = 0; xx < x; xx++) {
 			row.push_back(Empty);
 		}
 		b.push_back(row);
@@ -197,11 +197,19 @@ main(int argc, char **argv)
 	}
 	view->init(x, y);
 	Direction d = East;
-	std::list<std::tuple<int, int>> snek;
 
-	snek.push_front(std::tuple(3, 3));
+	std::list<std::tuple<int, int>> snek;
+	snek.push_front(std::tuple(x/2 - 2, y/2));
+	board[y/2][x/2 - 2] = Tail;
+	snek.push_front(std::tuple(x/2 - 1, y/2));
+	board[y/2][x/2 - 1] = Tail;
+	snek.push_front(std::tuple(x/2, y/2));
+	board[y/2][x/2] = Head;
 
 	while (view->running == true) {
+		draw_board(view);
+		view->flush_display();
+		view->sleep();
 
 		int key = view->get_key();
 		if (key >= '0' && key <= '9') {
@@ -211,19 +219,14 @@ main(int argc, char **argv)
 						   &lib, &view))
 				return 1;
 			view->init(x, y);
-			draw_board(view);
-			view->flush_display();
+			continue;
 		}
 		else if (key == 'q') {
 			view->destroy();
 			exit(0);
 		}
-
 		get_direction(key, &d);
 		int crash = move_snake(d, snek);
-		draw_board(view);
-		view->flush_display();
-		view->sleep();
 		if (crash)
 			assert(0);
 	}

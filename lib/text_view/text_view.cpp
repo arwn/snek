@@ -12,9 +12,9 @@ text_view::init(int x, int y)
 	running = true;
 
 	GameBoard b;
-	for (int xx = 0; xx < x; xx++) {
+	for (int yy = 0; yy < y; yy++) {
 		std::vector<BoardTile> row;
-		for (int yy = 0; yy < y; yy++) {
+		for (int xx = 0; xx < x; xx++) {
 			row.push_back(Empty);
 		}
 		b.push_back(row);
