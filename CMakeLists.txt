@@ -26,7 +26,6 @@ add_executable(snake snake.cpp)
 
 target_link_libraries(
 	curses_view
-	text_view
 
 	#external
 	${CURSES_LIBRARIES}

@@ -141,6 +141,7 @@ change_lib(const char* libname, void** lib, iview** view)
 	if (*lib)
 		dlclose(*lib);
 	*lib = new_lib;
+	delete *view;
 	*view = new_view;
 	return 0;
 }
@@ -194,6 +195,7 @@ main(int argc, char **argv)
 
 	if (change_lib(libs[0], &lib, &view)) {
 		std::cerr << "Unable to change lib" << std::endl;
+		return 1;
 	}
 	view->init(x, y);
 	Direction d = East;
@@ -214,16 +216,12 @@ main(int argc, char **argv)
 		int key = view->get_key();
 		if (key >= '0' && key <= '9') {
 			view->destroy();
-			delete view;
-			if (change_lib(libs[(key - '0') % (sizeof(libs) / sizeof(*libs))],
-						   &lib, &view))
-				return 1;
+			change_lib(libs[(key - '0') % (sizeof(libs) / sizeof(*libs))], &lib, &view);
 			view->init(x, y);
 			continue;
 		}
 		else if (key == 'q') {
-			view->destroy();
-			exit(0);
+			break;
 		}
 		get_direction(key, &d);
 		int crash = move_snake(d, snek);
