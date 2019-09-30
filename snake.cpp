@@ -230,5 +230,6 @@ main(int argc, char **argv)
 	}
 
 	view->destroy();
+	delete view;
 	return 0;
 }
