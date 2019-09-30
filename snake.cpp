@@ -36,7 +36,19 @@ get_direction(int key, Direction *d)
 	}
 }
 
-// TODO: this function doesn't work, make it linked list.
+void
+gen_fruit(void)
+{
+	std::vector<BoardTile*> empty;
+	for (int yy = 0; yy < board.size(); ++yy) {
+		for (int xx = 0; xx < board[yy].size(); ++xx) {
+			if (board[yy][xx] == Empty)
+				empty.push_back(&board[yy][xx]);
+		}
+	}
+	*empty[rand() % empty.size()] = Fruit;
+}
+
 int
 move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 {
@@ -46,23 +58,20 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 	switch (d) {
 	case North:
 		--y;
-		// board[y - 1][x] = Head;
 		break;
 	case South:
 		++y;
-		// board[y + 1][x] = Head;
 		break;
 	case East:
 		++x;
-		// board[y][x + 1] = Head;
 		break;
 	case West:
 		--x;
-		// board[y][x - 1] = Head;
 		break;
 	}
 
-	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size()) {
+	if (x < 0 || y < 0 || y >= board.size() || x >= board[y].size()
+		|| board[y][x] == Tail) {
 		auto back = snek.back();
 		board[std::get<1>(back)][std::get<0>(back)] = Empty;
 		snek.pop_back();
@@ -75,6 +84,10 @@ move_snake(Direction d, std::list<std::tuple<int, int>>& snek)
 		auto back = snek.back();
 		board[std::get<1>(back)][std::get<0>(back)] = Empty;
 		snek.pop_back();
+	} else {
+		board[y][x] = Head;
+
+		gen_fruit();
 	}
 
 	snek.push_front(std::tuple<int, int>(x, y));
@@ -188,6 +201,8 @@ main(int argc, char **argv)
 		return 1;
 	}
 
+	srand(time(NULL));
+
 	board = make_board(x, y);
 
 	iview* view = NULL;
@@ -208,6 +223,8 @@ main(int argc, char **argv)
 	snek.push_front(std::tuple(x/2, y/2));
 	board[y/2][x/2] = Head;
 
+	gen_fruit();
+
 	while (view->running == true) {
 		draw_board(view);
 		view->flush_display();
@@ -216,7 +233,8 @@ main(int argc, char **argv)
 		int key = view->get_key();
 		if (key >= '0' && key <= '9') {
 			view->destroy();
-			change_lib(libs[(key - '0') % (sizeof(libs) / sizeof(*libs))], &lib, &view);
+			change_lib(libs[(key - '0') % (sizeof(libs) / sizeof(*libs))],
+					   &lib, &view);
 			view->init(x, y);
 			continue;
 		}
