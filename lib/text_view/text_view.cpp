@@ -28,8 +28,7 @@ text_view::init(int x, int y)
 void
 text_view::destroy()
 {
-	// TODO: what the hell? why is this here?
-	init(0, 0);
+	// ~board();
 }
 
 void

@@ -1,6 +1,7 @@
 TODO:
-  - specify size of board in command line
   - 3 libs
   - quit button
   - tab between GUI libs
 
+DONE:
+  - specify size of board in command line

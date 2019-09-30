@@ -6,7 +6,7 @@
 void
 curses_view::keylisten()
 {
-	while (key != CTRLD) {
+	while (running) {
 		auto c = getchar();
 		if (c != ERR)
 			key = c;
@@ -40,8 +40,9 @@ void
 curses_view::destroy()
 {
 	endwin();
-	close(STDIN_FILENO);
-	// keythread.join();
+	// close(STDIN_FILENO);
+	running = false;
+	keythread.join();
 }
 
 void

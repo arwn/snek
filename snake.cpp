@@ -107,12 +107,12 @@ load_lib(const char* libname, void** lib, iview** view)
 
 	new_lib = dlopen(libname, RTLD_NOW);
 	if (!new_lib) {
-		std::cout << "Unable to open new_lib: " << dlerror() << std::endl;
+		std::cerr << "Unable to open new_lib: " << dlerror() << std::endl;
 		return 1;
 	}
 	iview* (*fn)(void) = (iview*(*)())dlsym(new_lib, "make_view");
 	if (!fn) {
-		std::cout << "Unable to open \"make_view\": " << dlerror() << std::endl;
+		std::cerr << "Unable to open \"make_view\": " << dlerror() << std::endl;
 		dlclose(new_lib);
 		return 1;
 	}
@@ -178,12 +178,12 @@ main(int argc, char **argv)
 	case 1:
 		break;
 	default:
-		std::cout << "usage: " << argv[0] << "[x] [y]" << std::endl;
+		std::cerr << "usage: " << argv[0] << "[x] [y]" << std::endl;
 		return 1;
 	}
 
 	if (x < 5 || y < 5) {
-		std::cout << "Wait that's ridiculous" << std::endl;
+		std::cerr << "Wait that's ridiculous" << std::endl;
 		return 1;
 	}
 
@@ -192,7 +192,7 @@ main(int argc, char **argv)
 	iview* view = NULL;
 	void* lib = NULL;
 
-	int ii = 0;
+	int ii = 1;
 
 	if (change_lib(libs[ii], &lib, &view)) {
 		std::cerr << "Unable to change lib" << std::endl;
@@ -204,12 +204,21 @@ main(int argc, char **argv)
 	snek.push_front(std::tuple(3, 3));
 
 	while (view->running == true) {
-		// view->destroy();
-		// if (change_lib(libs[ii++ % 2], &lib, &view))
-		// 	return 1;
-		// view->init(x, y);
 
 		int key = view->get_key();
+		if (key == '1') {
+			view->destroy();
+			if (change_lib(libs[++ii % 2], &lib, &view))
+				return 1;
+			view->init(x, y);
+			draw_board(view);
+			view->flush_display();
+		}
+		else if (key == 'q') {
+			view->destroy();
+			exit(0);
+		}
+
 		get_direction(key, &d);
 		int crash = move_snake(d, snek);
 		draw_board(view);
