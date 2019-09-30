@@ -192,9 +192,7 @@ main(int argc, char **argv)
 	iview* view = NULL;
 	void* lib = NULL;
 
-	int ii = 1;
-
-	if (change_lib(libs[ii], &lib, &view)) {
+	if (change_lib(libs[0], &lib, &view)) {
 		std::cerr << "Unable to change lib" << std::endl;
 	}
 	view->init(x, y);
@@ -206,10 +204,11 @@ main(int argc, char **argv)
 	while (view->running == true) {
 
 		int key = view->get_key();
-		if (key == '1') {
+		if (key >= '0' && key <= '9') {
 			view->destroy();
 			delete view;
-			if (change_lib(libs[++ii % 2], &lib, &view))
+			if (change_lib(libs[(key - '0') % (sizeof(libs) / sizeof(*libs))],
+						   &lib, &view))
 				return 1;
 			view->init(x, y);
 			draw_board(view);
