@@ -208,6 +208,7 @@ main(int argc, char **argv)
 		int key = view->get_key();
 		if (key == '1') {
 			view->destroy();
+			delete view;
 			if (change_lib(libs[++ii % 2], &lib, &view))
 				return 1;
 			view->init(x, y);
