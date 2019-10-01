@@ -271,6 +271,8 @@ main(int argc, char **argv)
 	}
 	delete view;
 	dlclose(lib);
+
+	std::cout << "Score: " << snek.size() << std::endl;
 	if (crash)
 		assert("Game over" && 0);
 }
