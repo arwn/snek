@@ -1,8 +1,13 @@
 #include <iostream>
 #include "curses_view.hpp"
 
-// TODO remove key != CTRLD. quit game from menu.
-// TODO add timeout to check if game is still running
+// generated code
+curses_view::curses_view(void) { }
+curses_view::curses_view(curses_view const &cp) { *this = cp; }
+curses_view::~curses_view(void) { }
+curses_view& curses_view::operator=(curses_view const &) { return *this; }	// TODO: implement
+// end generated code
+
 void
 curses_view::keylisten()
 {
@@ -32,6 +37,8 @@ make_view(void)
 void
 curses_view::init(int x, int y)
 {
+	(void)x;
+	(void)y;
 	// init ncurses
 	scr = initscr();
 	cbreak();
@@ -70,6 +77,7 @@ curses_view::draw_tile(BoardTile t, int y, int x)
 std::string
 curses_view::prompt_user(std::string msg)
 {
+	(void)msg;
 	waddstr(scr, "TODO: implement prompt user");
 	wrefresh(scr);
 	return nullptr;

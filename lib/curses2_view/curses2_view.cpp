@@ -1,10 +1,15 @@
 #include <iostream>
 #include "curses2_view.hpp"
 
-// TODO remove key != CTRLD. quit game from menu.
-// TODO add timeout to check if game is still running
+// generated code
+curses2_view::curses2_view(void) { }
+curses2_view::curses2_view(curses2_view const &cp) { *this = cp; }
+curses2_view::~curses2_view(void) { }
+curses2_view& curses2_view::operator=(curses2_view const &) { return *this; }	// TODO: implement
+// end generated code
+
 void
-curses_view::keylisten()
+curses2_view::keylisten()
 {
 	fd_set s_rd, s_wr, s_ex;
 	static struct timeval time = {0,100};
@@ -26,12 +31,14 @@ curses_view::keylisten()
 extern "C" iview*
 make_view(void)
 {
-	return (new curses_view());
+	return (new curses2_view());
 }
 
 void
-curses_view::init(int x, int y)
+curses2_view::init(int x, int y)
 {
+	(void)x;
+	(void)y;
 	// init ncurses
 	scr = initscr();
 	cbreak();
@@ -49,11 +56,11 @@ curses_view::init(int x, int y)
 	running = true;
 
 	// spawn listener thread
-	keythread = std::thread(&curses_view::keylisten, this);
+	keythread = std::thread(&curses2_view::keylisten, this);
 }
 
 void
-curses_view::destroy()
+curses2_view::destroy()
 {
 	endwin();
 	// close(STDIN_FILENO);
@@ -62,13 +69,13 @@ curses_view::destroy()
 }
 
 void
-curses_view::flush_display()
+curses2_view::flush_display()
 {
 	wrefresh(scr);
 }
 
 void
-curses_view::draw_tile(BoardTile t, int y, int x)
+curses2_view::draw_tile(BoardTile t, int y, int x)
 {
 	int pair = 1;
 	if (t == Tail) {
@@ -86,22 +93,23 @@ curses_view::draw_tile(BoardTile t, int y, int x)
 }
 
 std::string
-curses_view::prompt_user(std::string msg)
+curses2_view::prompt_user(std::string msg)
 {
+	(void)msg;
 	waddstr(scr, "TODO: implement prompt user");
 	wrefresh(scr);
 	return nullptr;
 }
 
 void
-curses_view::message_user(std::string msg)
+curses2_view::message_user(std::string msg)
 {
 	waddstr(scr, msg.c_str());
 	wrefresh(scr);
 }
 
 void
-curses_view::sleep(void)
+curses2_view::sleep(void)
 {
 	::sleep(1);
 }

@@ -16,6 +16,14 @@ class curses_view: public iview {
 		void keylisten();
 
 	public:
+
+		// generated code
+		curses_view(void);
+		curses_view(curses_view const &);
+		~curses_view(void);
+		curses_view& operator=(curses_view const &);
+		// end generated code
+
 		void init(int x, int y);
 		void destroy();
 		void flush_display();

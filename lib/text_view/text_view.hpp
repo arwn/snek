@@ -13,6 +13,14 @@ class text_view: public iview {
 		GameBoard board;
 
 	public:
+
+		// generated code
+		text_view(void);
+		text_view(text_view const &);
+		~text_view(void);
+		text_view& operator=(text_view const &);
+		// end generated code
+
 		void init(int x, int y);
 		void destroy();
 		void flush_display();

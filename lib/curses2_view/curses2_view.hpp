@@ -8,7 +8,7 @@
 
 #define CTRLD 4
 
-class curses_view: public iview {
+class curses2_view: public iview {
 	private:
 		WINDOW *scr;
 		std::thread keythread;
@@ -16,6 +16,14 @@ class curses_view: public iview {
 		void keylisten();
 
 	public:
+
+		// generated code
+		curses2_view(void);
+		curses2_view(curses2_view const &);
+		~curses2_view(void);
+		curses2_view& operator=(curses2_view const &);
+		// end generated code
+
 		void init(int x, int y);
 		void destroy();
 		void flush_display();

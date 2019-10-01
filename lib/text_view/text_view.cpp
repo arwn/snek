@@ -1,5 +1,14 @@
 #include "text_view.hpp"
 
+#include "text_view.hpp"
+
+// generated code
+text_view::text_view(void) { }
+text_view::text_view(text_view const &cp) { *this = cp; }
+text_view::~text_view(void) { }
+text_view& text_view::operator=(text_view const &) { return *this; }	// TODO: implement
+// end generated code
+
 extern "C" iview*
 make_view(void)
 {
