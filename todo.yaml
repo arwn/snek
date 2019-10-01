@@ -1,5 +1,4 @@
 TODO:
-  - 3 libs
 
 DONE:
   - specify size of board in command line
@@ -7,3 +6,5 @@ DONE:
   - tab between GUI libs
   - center snake on load
   - fix curses_view blocking getchar
+  - 3 libs
+  - handle lib exceptions

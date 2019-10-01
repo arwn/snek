@@ -42,6 +42,9 @@ curses_view::init(int x, int y)
 	start_color();
 
 	init_pair(1, COLOR_YELLOW, COLOR_MAGENTA);
+	init_pair(2, COLOR_GREEN, COLOR_YELLOW);
+	init_pair(3, COLOR_BLACK, COLOR_RED);
+	init_pair(4, COLOR_GREEN, COLOR_WHITE);
 
 	running = true;
 
@@ -67,11 +70,20 @@ curses_view::flush_display()
 void
 curses_view::draw_tile(BoardTile t, int y, int x)
 {
-	attron(COLOR_PAIR(1));
+	int pair = 1;
+	if (t == Tail) {
+		pair = 2;
+	}
+	else if (t == Head) {
+		pair = 3;
+	}
+	else if (t == Fruit) {
+		pair = 4;
+	}
+	attron(COLOR_PAIR(pair));
 	mvaddch(y, x, 'z' - t);
-	attroff(COLOR_PAIR(1));
+	attroff(COLOR_PAIR(pair));
 }
-
 
 std::string
 curses_view::prompt_user(std::string msg)

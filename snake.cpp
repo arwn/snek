@@ -133,7 +133,13 @@ load_lib(const char* libname, void** lib, iview** view)
 		dlclose(new_lib);
 		return 1;
 	}
-	new_view = fn();
+	try {
+		new_view = fn();
+	}
+	catch (std::exception& e) {
+		std::cerr << "Unable to initialize view: " << e.what() << std::endl;
+		return 1;
+	}
 	if (!new_view) {
 		std::cerr << "Unable to create view" << std::endl;
 		dlclose(new_lib);
@@ -217,7 +223,6 @@ main(int argc, char **argv)
 		std::cerr << "Unable to change lib" << std::endl;
 		return 1;
 	}
-	view->init(x, y);
 	Direction d = East;
 
 	Snake snek;
@@ -231,32 +236,41 @@ main(int argc, char **argv)
 	gen_fruit();
 	int crash = 0;
 
-	while (view->running == true) {
-		draw_board(view);
-		view->flush_display();
-		view->sleep();
+	try {
+		view->init(x, y);
+		while (view->running == true) {
+			draw_board(view);
+			view->flush_display();
+			view->sleep();
 
-		int key = view->get_key();
-		if (key >= '0' && key <= '9') {
-			view->destroy();
-			change_lib(libs[(key - '0') % (sizeof(libs) / sizeof(*libs))],
-					   &lib, &view);
-			view->init(x, y);
-			continue;
+			int key = view->get_key();
+			if (key >= '0' && key <= '9') {
+				view->destroy();
+				change_lib(libs[(key - '0') % (sizeof(libs) / sizeof(*libs))],
+						   &lib, &view);
+				view->init(x, y);
+				continue;
+			}
+			else if (key == 'q') {
+				break;
+			}
+			get_direction(key, &d);
+			crash = move_snake(d, snek);
+			if (crash)
+				break;
 		}
-		else if (key == 'q') {
-			break;
-		}
-		get_direction(key, &d);
-		crash = move_snake(d, snek);
-		if (crash)
-			break;
 	}
-
-	view->destroy();
+	catch (std::exception& e) {
+		std::cerr << "Lib failed to execute: " << e.what() << std::endl;
+	}
+	try {
+		view->destroy();
+	}
+	catch (std::exception& e) {
+		std::cerr << "Unable to destroy: " << e.what() << std::endl;
+	}
 	delete view;
 	dlclose(lib);
 	if (crash)
 		assert("Game over" && 0);
-	return 0;
 }
