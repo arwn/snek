@@ -195,7 +195,10 @@ main(int argc, char **argv)
 {
 	int x = 10;
 	int y = 10;
+	int libidx = 0;
 	switch (argc) {
+	case 4:
+		libidx = atoi(argv[3]);
 	case 3:
 		y = atoi(argv[2]);
 	case 2:
@@ -219,7 +222,7 @@ main(int argc, char **argv)
 	iview* view = NULL;
 	void* lib = NULL;
 
-	if (change_lib(libs[0], &lib, &view)) {
+	if (change_lib(libs[libidx % (sizeof(libs) / sizeof(*libs))], &lib, &view)) {
 		std::cerr << "Unable to change lib" << std::endl;
 		return 1;
 	}
