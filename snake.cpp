@@ -206,7 +206,7 @@ main(int argc, char **argv)
 	case 1:
 		break;
 	default:
-		std::cerr << "usage: " << argv[0] << "[x] [y]" << std::endl;
+		std::cerr << "usage: " << argv[0] << " [x] [y]" << std::endl;
 		return 1;
 	}
 
